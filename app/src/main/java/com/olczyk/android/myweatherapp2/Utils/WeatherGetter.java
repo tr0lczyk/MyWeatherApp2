@@ -26,8 +26,8 @@ public class WeatherGetter {
 
     private static final String OPEN_WEATHER_CURRENT ="http://api.openweathermap.org/data/2.5/forecast/daily?lat=%s&lon=%s&cnt=7&lang=pl";
 
-    String lat = "49.705870";
-    String lng = "20.422280";
+    String lat = "53.0948800";
+    String lng = "23.6684800";
 
     @Pref
     Preferences_ preferences;
@@ -35,64 +35,64 @@ public class WeatherGetter {
     @Background
     public void getWeatherForecast(Context context, WeatherCallback callback){
 
-//        long delta = System.currentTimeMillis()-preferences.lastWeatherUpdate().get();
-//        if(preferences.weatherJson().equals("") || delta >14400000){
-//            try {
-//                URL url = new URL(String.format(OPEN_WEATHER_CURRENT,lat,lng));
-//                HttpURLConnection httpURLConnection =
-//                        (HttpURLConnection) url.openConnection();
-//                httpURLConnection.addRequestProperty("x-api-key", context.getString(R.string.ow_key));
-//                BufferedReader reader = new BufferedReader(new InputStreamReader(httpURLConnection
-//                .getInputStream()));
-//                StringBuffer jsonBuffer = new StringBuffer(1024);
-//                String temp = "";
-//                while((temp=reader.readLine()) != null){
-//                    jsonBuffer.append(temp).append("\n");
-//                }
-//                reader.close();
-//                JSONObject jsonObject = new JSONObject(jsonBuffer.toString());
-//                if(jsonObject.getInt("cod") == 200){
-//                    preferences.edit().weatherJson().put(jsonBuffer.toString()).apply();
-//                    Log.i("LOG","data" + jsonBuffer.toString());
-//                    preferences.edit().lastWeatherUpdate().put(System.currentTimeMillis()).apply();
-//                    callback.onWeatherLoaded(1);
-//                } else {
-//                    callback.onWeatherLoaded(0);
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                callback.onWeatherLoaded(0);
-//            }
-//        } else {
-//            callback.onWeatherLoaded(1);
-//        }
-
-        try {
-            URL url = new URL(String.format(OPEN_WEATHER_CURRENT,lat,lng));
-            HttpURLConnection httpURLConnection =
-                    (HttpURLConnection) url.openConnection();
-            httpURLConnection.addRequestProperty("x-api-key", context.getString(R.string.ow_key));
-            BufferedReader reader = new BufferedReader(new InputStreamReader(httpURLConnection
-                    .getInputStream()));
-            StringBuffer jsonBuffer = new StringBuffer(1024);
-            String temp;
-            while((temp=reader.readLine()) != null){
-                jsonBuffer.append(temp).append("\n");
-            }
-            reader.close();
-            JSONObject jsonObject = new JSONObject(jsonBuffer.toString());
-            if(jsonObject.getInt("cod") == 200){
-                preferences.edit().weatherJson().put(jsonBuffer.toString()).apply();
-                Log.i("LOG","data" + jsonBuffer.toString());
-                preferences.edit().lastWeatherUpdate().put(System.currentTimeMillis()).apply();
-                callback.onWeatherLoaded(1);
-            } else {
+        long delta = System.currentTimeMillis()-preferences.lastWeatherUpdate().get();
+        if(preferences.weatherJson().equals("") || delta < 14400000){
+            try {
+                URL url = new URL(String.format(OPEN_WEATHER_CURRENT,lat,lng));
+                HttpURLConnection httpURLConnection =
+                        (HttpURLConnection) url.openConnection();
+                httpURLConnection.addRequestProperty("x-api-key", context.getString(R.string.ow_key));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(httpURLConnection
+                .getInputStream()));
+                StringBuffer jsonBuffer = new StringBuffer(1024);
+                String temp = "";
+                while((temp=reader.readLine()) != null){
+                    jsonBuffer.append(temp).append("\n");
+                }
+                reader.close();
+                JSONObject jsonObject = new JSONObject(jsonBuffer.toString());
+                if(jsonObject.getInt("cod") == 200){
+                    preferences.edit().weatherJson().put(jsonBuffer.toString()).apply();
+                    Log.i("LOG","data" + jsonBuffer.toString());
+                    preferences.edit().lastWeatherUpdate().put(System.currentTimeMillis()).apply();
+                    callback.onWeatherLoaded(1);
+                } else {
+                    callback.onWeatherLoaded(0);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
                 callback.onWeatherLoaded(0);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            callback.onWeatherLoaded(0);
+        } else {
+            callback.onWeatherLoaded(1);
         }
+
+//        try {
+//            URL url = new URL(String.format(OPEN_WEATHER_CURRENT,lat,lng));
+//            HttpURLConnection httpURLConnection =
+//                    (HttpURLConnection) url.openConnection();
+//            httpURLConnection.addRequestProperty("x-api-key", context.getString(R.string.ow_key));
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(httpURLConnection
+//                    .getInputStream()));
+//            StringBuffer jsonBuffer = new StringBuffer(1024);
+//            String temp;
+//            while((temp=reader.readLine()) != null){
+//                jsonBuffer.append(temp).append("\n");
+//            }
+//            reader.close();
+//            JSONObject jsonObject = new JSONObject(jsonBuffer.toString());
+//            if(jsonObject.getInt("cod") == 200){
+//                preferences.edit().weatherJson().put(jsonBuffer.toString()).apply();
+//                Log.i("LOG","data" + jsonBuffer.toString());
+//                preferences.edit().lastWeatherUpdate().put(System.currentTimeMillis()).apply();
+//                callback.onWeatherLoaded(1);
+//            } else {
+//                callback.onWeatherLoaded(0);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            callback.onWeatherLoaded(0);
+//        }
     }
 
     public int getDayTemp(int day){
