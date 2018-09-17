@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">My Weather App 2</string>
+    <string name="ow_key" translatable="false">c0d15860f7d6f001f7a6d6a4205707d7</string>
+</resources>
